@@ -1,0 +1,718 @@
+P_!
+# 🧠 Machine Learning Basics
+
+A quick summary of essential machine learning concepts, tools, and quiz-style notes.
+
+---
+
+## 📘 Introduction to Machine Learning Tools & Libraries
+
+| Library       | Description                                                                 |
+|---------------|-----------------------------------------------------------------------------|
+| **NumPy**     | Numerical computing with support for multi-dimensional arrays.              |
+| **SciPy**     | Builds on NumPy for scientific and technical computing.                     |
+| **Scikit-learn** | Simple and efficient tools for classical ML algorithms.                  |
+| **Theano**    | Optimizes mathematical expressions involving arrays.                        |
+| **TensorFlow**| Google’s deep learning framework for scalable ML models.                    |
+| **Keras**     | User-friendly neural networks API running on TensorFlow.                    |
+| **PyTorch**   | Dynamic, flexible deep learning framework by Facebook.                      |
+| **Pandas**    | Data manipulation and analysis using labeled data structures.               |
+| **Matplotlib**| 2D plotting library for creating graphs and charts.                         |
+
+---
+
+## 📝 Quiz
+
+### 1. What is Machine Learning?
+
+> Machine Learning is a branch of AI that enables systems to learn from data and make decisions or predictions without being explicitly programmed.
+
+---
+
+### 2. Types of Learning
+
+- **Supervised Learning**: Learns from labeled datasets to predict outcomes.
+- **Unsupervised Learning**: Finds hidden patterns in unlabeled data.
+- **Reinforcement Learning**: Learns by interacting with the environment to maximize rewards.
+
+---
+P_2
+Here’s your full **EXERCISE + QUIZ** content in a GitHub-friendly format — perfect for notes or submission.
+This version includes explanations and can be used in `README.md` or `.ipynb`.
+
+---
+
+## 🧪 Exercise: Data Preprocessing
+
+Perform the following on a given dataset:
+
+### 1. Handle Missing Values
+
+```python
+import pandas as pd
+
+# Example
+df = pd.read_csv('your_dataset.csv')
+
+# (i) Handling missing values
+df.fillna(method='ffill', inplace=True)      # Forward fill
+# or
+df.dropna(inplace=True)                      # Drop missing rows
+```
+
+### 2. Encoding Categorical Variables
+
+```python
+# (ii) Encoding
+df = pd.get_dummies(df, columns=['Gender', 'Country'])  # One-hot encoding
+
+# OR Label encoding
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+df['Category'] = le.fit_transform(df['Category'])
+```
+
+### 3. Feature Scaling (Normalize / Standardize)
+
+```python
+# (iii) Converting data to same range
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+df[['Age', 'Salary']] = scaler.fit_transform(df[['Age', 'Salary']])
+```
+
+### 4. Splitting Dataset
+
+```python
+# (iv) Train-test split
+from sklearn.model_selection import train_test_split
+X = df.drop('Target', axis=1)
+y = df['Target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+---
+
+## ✅ QUIZ
+
+### 1. Explain different ways of handling missing values.
+
+* **Deletion**: Remove rows (`df.dropna()`) or columns with missing data. Used when missing data is minimal.
+* **Imputation**: Fill missing values using:
+
+  * **Mean/Median/Mode**: `df.fillna(df['Column'].mean())`
+  * **Forward/Backward Fill**: Propagate previous/next values.
+  * **Model-based Imputation**: Use regression or k-NN to predict missing values.
+
+---
+
+### 2. What is categorical data? Explain its types with examples.
+
+**Categorical Data** refers to variables that represent categories instead of numerical values.
+
+#### Types:
+
+* **Nominal**: No order or ranking.
+
+  * *Example*: Gender (Male, Female), Color (Red, Blue)
+* **Ordinal**: Has an inherent order.
+
+  * *Example*: Education Level (High School < Bachelor's < Master's), Ratings (Low, Medium, High)
+
+---
+
+If you want this as a `.ipynb` Jupyter Notebook or `.md` GitHub file, I can generate that too. Just let me know!
+P-3
+Here’s your **Exercise + Quiz** content for **Simple Linear Regression** in a clean, GitHub-ready format (suitable for `README.md`, `ipynb`, or assignment submission):
+
+---
+
+## 🧪 **Exercise: Implement Simple Linear Regression**
+
+```python
+# Step-by-step implementation of Simple Linear Regression
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Load dataset
+df = pd.read_csv('your_dataset.csv')  # Replace with your actual file
+
+# Example: Assuming columns 'Experience' and 'Salary'
+X = df[['Experience']]  # Independent variable
+y = df['Salary']        # Dependent variable
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict
+y_pred = model.predict(X_test)
+
+# Evaluation
+print("Mean Squared Error:", mean_squared_error(y_test, y_pred))
+print("R² Score:", r2_score(y_test, y_pred))
+
+# Plotting
+plt.scatter(X_test, y_test, color='blue', label='Actual')
+plt.plot(X_test, y_pred, color='red', label='Prediction')
+plt.xlabel('Experience')
+plt.ylabel('Salary')
+plt.legend()
+plt.title('Simple Linear Regression')
+plt.show()
+```
+
+---
+
+## ✅ **QUIZ**
+
+### 1. What is Simple Linear Regression?
+
+Simple Linear Regression is a statistical method used to model the relationship between a single independent variable (**X**) and a dependent variable (**Y**) by fitting a straight line (Y = mX + c) through the data.
+
+* It assumes a **linear relationship** between variables.
+* Example: Predicting salary based on years of experience.
+
+---
+
+### 2. How can we take care of outliers in data?
+
+Outliers can skew your model’s accuracy. Methods to handle them include:
+
+* **Detection:**
+
+  * **Statistical Tests:** Z-score, IQR method
+  * **Visualization:** Box plot, scatter plot
+* **Handling:**
+
+  * **Remove Outliers:** If they're errors or rare, drop them.
+  * **Transform Data:** Use log, square root to reduce impact.
+  * **Imputation:** Replace outliers with median or mode.
+  * **Use Robust Models:** Models like RANSAC are less sensitive to outliers.
+
+---
+P-4
+Here’s the complete **Exercise + Quiz** content for **Support Vector Machine (SVM)** in a GitHub/Notebook-ready format:
+
+---
+
+## 🧪 **Exercise: Implement Support Vector Machine (SVM)**
+
+```python
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report
+
+# Load dataset
+df = pd.read_csv('your_dataset.csv')  # Replace with your dataset
+
+# Example: Assume 'features' and 'label' are column names
+X = df.drop('label', axis=1)  # Independent features
+y = df['label']               # Target variable
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# SVM model (using linear kernel)
+model = SVC(kernel='linear')
+model.fit(X_train, y_train)
+
+# Prediction
+y_pred = model.predict(X_test)
+
+# Evaluation
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+```
+
+---
+
+## ✅ **QUIZ**
+
+### 1. What is Support Vector Machine (SVM)?
+
+Support Vector Machine (SVM) is a supervised machine learning algorithm used for classification and regression tasks.
+It works by finding the optimal **hyperplane** that best separates data points of different classes in a high-dimensional space.
+
+---
+
+### 2. What are Support Vectors and Hyperplane in SVM?
+
+* **Support Vectors**:
+  These are the critical data points closest to the separating hyperplane. They influence the position and orientation of the hyperplane.
+
+* **Hyperplane**:
+  It's the decision boundary that separates different classes. In 2D, it’s a line; in 3D, a plane; and in higher dimensions, a hyperplane.
+
+---
+
+### 3. What are the factors determining the effectiveness of SVM?
+
+1. **Kernel Choice**: Linear, Polynomial, RBF (Radial Basis Function), etc.
+2. **Regularization Parameter (C)**: Controls trade-off between margin width and classification error.
+3. **Gamma (γ)**: Defines how far the influence of a single training example reaches (used in RBF/poly kernels).
+4. **Feature Scaling**: SVMs are sensitive to feature scales—standardization often improves performance.
+5. **Noise and Outliers**: SVM may be affected by noisy data; proper preprocessing is essential.
+
+---
+
+Would you like a full `.ipynb` Jupyter Notebook with all code and explanations included for GitHub submission or portfolio use?
+P_5
+
+Here's the full **QUIZ + EXERCISE** content for **Clustering and k-Means** — written in a GitHub/Notebook-friendly format. This is ideal for academic submissions, GitHub repos, or personal study notes.
+
+---
+
+## ✅ **QUIZ**
+
+### 1. What is Clustering?
+
+Clustering is an **unsupervised learning** technique that groups similar data points into **clusters** based on their features, without predefined labels.
+It aims to ensure that data points within a cluster are more similar to each other than to those in other clusters.
+
+---
+
+### 2. What is the k-means algorithm?
+
+**k-Means** is a popular clustering algorithm that partitions the dataset into **k clusters** by minimizing the variance within each cluster.
+
+#### Steps:
+
+1. Choose the number of clusters `k`.
+2. Randomly initialize `k` centroids.
+3. Assign each point to the nearest centroid.
+4. Update centroids by calculating the mean of assigned points.
+5. Repeat steps 3–4 until convergence (no change in centroids).
+
+---
+
+### 3. Applications of Unsupervised Learning in Engineering
+
+* **Anomaly Detection**: Fault detection in manufacturing or power systems.
+* **Customer Segmentation**: In software products or e-commerce.
+* **Image Compression**: Using clustering algorithms like k-means.
+* **Network Traffic Analysis**: Intrusion detection and traffic pattern discovery.
+* **Recommender Systems**: Grouping user behavior without labels.
+
+---
+
+## 🧪 **EXERCISE: Implement k-Means Clustering**
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+# Load dataset
+df = pd.read_csv('your_dataset.csv')  # Replace with your actual file
+
+# Optional: Select relevant numeric columns
+X = df[['Feature1', 'Feature2']]  # Replace with your actual feature names
+
+# Feature scaling (important for k-means)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Fit k-means
+kmeans = KMeans(n_clusters=3, random_state=42)  # Change number of clusters as needed
+kmeans.fit(X_scaled)
+
+# Add cluster labels to the dataframe
+df['Cluster'] = kmeans.labels_
+
+# Plot clusters (only works for 2D features)
+plt.scatter(X_scaled[:, 0], X_scaled[:, 1], c=kmeans.labels_, cmap='viridis')
+plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], 
+            color='red', marker='x', label='Centroids')
+plt.title('k-Means Clustering')
+plt.xlabel('Feature1')
+plt.ylabel('Feature2')
+plt.legend()
+plt.show()
+```
+
+---
+
+Would you like this content packaged as a downloadable Jupyter Notebook (`.ipynb`) or GitHub `README.md` file?
+P_6
+Here’s the full **QUIZ + EXERCISE** content for **K-Fold Cross Validation**, perfect for GitHub README, academic notes, or Jupyter Notebook submissions.
+
+---
+
+## ✅ **QUIZ**
+
+### 1. What is K-Fold Cross Validation?
+
+**K-Fold Cross Validation** is a model evaluation technique where the dataset is divided into **k equal parts (folds)**.
+The model is trained on **k-1 folds** and tested on the **remaining 1 fold**. This process is repeated **k times**, with each fold used once as the test set.
+
+> Example: In 5-fold CV, the model is trained and tested 5 times on different data splits.
+
+---
+
+### 2. What is the Need for K-Fold Cross Validation?
+
+* **Reliable Performance Estimate**: Gives a better estimate of model performance than a single train/test split.
+* **Reduces Overfitting**: Evaluates the model on multiple subsets, ensuring it generalizes well.
+* **Utilizes Data Efficiently**: All data points are used for both training and testing at different times.
+
+---
+
+## 🧪 **EXERCISE: Implement K-Fold Cross Validation**
+
+```python
+import pandas as pd
+from sklearn.model_selection import KFold, cross_val_score
+from sklearn.linear_model import LogisticRegression  # Example model
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+import numpy as np
+
+# Load dataset
+df = pd.read_csv('your_dataset.csv')  # Replace with your actual file
+
+# Define features and target
+X = df.drop('target', axis=1)  # Replace 'target' with actual target column name
+y = df['target']
+
+# Scale features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Model
+model = LogisticRegression()
+
+# K-Fold Cross Validation
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+scores = cross_val_score(model, X_scaled, y, cv=kf, scoring='accuracy')
+
+# Results
+print("Accuracy scores for each fold:", scores)
+print("Average accuracy:", np.mean(scores))
+```
+
+---
+
+Would you like this saved as a `.ipynb` notebook or bundled with sample data? I can generate the full package for you!
+P_7
+Sure! Here's your complete **EXERCISE + QUIZ** content for **PCA (Principal Component Analysis)** — formatted for GitHub or Jupyter Notebook usage.
+
+---
+
+## 🧪 **EXERCISE: Implement PCA on the Given Dataset**
+
+```python
+import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+# Load dataset
+df = pd.read_csv('your_dataset.csv')  # Replace with your actual dataset
+
+# Separate features
+X = df.drop('target', axis=1)  # Replace 'target' if not needed for PCA
+
+# Standardize features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Apply PCA
+pca = PCA(n_components=2)  # Reduce to 2 components for visualization
+X_pca = pca.fit_transform(X_scaled)
+
+# Create DataFrame of principal components
+pca_df = pd.DataFrame(data=X_pca, columns=['PC1', 'PC2'])
+
+# Optional: Add labels for visualization
+if 'target' in df.columns:
+    pca_df['target'] = df['target']
+
+# Plot
+plt.figure(figsize=(8,6))
+if 'target' in df.columns:
+    for label in pca_df['target'].unique():
+        plt.scatter(pca_df[pca_df['target'] == label]['PC1'], pca_df[pca_df['target'] == label]['PC2'], label=label)
+    plt.legend()
+else:
+    plt.scatter(pca_df['PC1'], pca_df['PC2'])
+plt.title('PCA Result')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.grid(True)
+plt.show()
+```
+
+---
+
+## ✅ **QUIZ: PCA (Principal Component Analysis)**
+✅ 1. What is Dimensionality Reduction?
+Dimensionality Reduction is the process of reducing the number of input variables (features) in a dataset while preserving as much important information (variance) as possible.
+
+🔍 Why it's used:
+To eliminate redundant or correlated features
+
+To reduce computational cost
+
+To improve model performance and avoid overfitting
+
+To visualize high-dimensional data in 2D/3D
+
+Example: Reducing a dataset with 50 features to 2–3 principal features.
+
+✅ 2. Explain PCA Algorithm (Principal Component Analysis)
+PCA is a statistical technique for dimensionality reduction that transforms the original correlated features into a new set of uncorrelated features called principal components.
+
+🧠 Key Concepts:
+Principal components are linear combinations of original features.
+
+The first component captures the maximum variance.
+
+Each next component captures the remaining variance orthogonal to the previous.
+
+P_8
+Here is the complete **QUIZ + EXERCISE** content for **Association Rule Mining and Apriori Algorithm**, suitable for GitHub, Jupyter Notebook, or college assignments.
+
+---
+
+## ✅ **QUIZ**
+
+### 1. What is Association Rule Mining?
+
+**Association Rule Mining** is a data mining technique used to find **interesting relationships (associations or patterns)** between items in large datasets.
+It is commonly used in **market basket analysis** to discover how items are frequently bought together.
+
+#### Example:
+
+If a customer buys *bread* and *butter*, they are likely to buy *jam*.
+**Rule:** `{Bread, Butter} ⇒ {Jam}`
+
+---
+
+### 2. Explain Apriori Algorithm
+
+The **Apriori Algorithm** is a classic algorithm used for mining **frequent itemsets** and deriving **association rules**.
+
+#### Key Concepts:
+
+* **Support**: Frequency of an itemset in the dataset.
+* **Confidence**: How often a rule has been found to be true.
+* **Lift**: How much more likely the RHS is given the LHS compared to random chance.
+
+### 📌 Apriori Algorithm Steps:
+
+1. **Set a minimum support threshold**.
+2. **Find all frequent itemsets** that meet the minimum support.
+3. **Generate candidate itemsets** from frequent itemsets.
+4. **Prune** candidate itemsets that have infrequent subsets.
+5. **Generate association rules** from frequent itemsets based on confidence.
+
+---
+
+## 🧪 **EXERCISE: Implement Apriori Algorithm**
+
+We’ll use the `mlxtend` library in Python.
+
+```python
+# Install required library (if not installed)
+# !pip install mlxtend
+
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Load dataset
+df = pd.read_csv('your_dataset.csv')  # Must be in one-hot encoded format
+
+# Example format:
+# | Milk | Bread | Butter |
+# |------|-------|--------|
+# |  1   |   1   |   0    |
+# |  0   |   1   |   1    |
+
+# Apply Apriori
+frequent_itemsets = apriori(df, min_support=0.3, use_colnames=True)
+
+# Generate rules
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.6)
+
+# Show results
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+
+print("\nAssociation Rules:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
+```
+
+---
+
+### 📌 Notes:
+
+* Dataset must be in **transaction format (binary one-hot encoded)**.
+* You can use `TransactionEncoder` from `mlxtend.preprocessing` if your dataset is a list of item transactions.
+
+---
+
+Would you like me to generate a sample dataset and `.ipynb` file to try this in Colab or Jupyter?
+P-9
+Here’s your **EXERCISE + QUIZ** content on **Thompson Sampling and Reinforcement Learning (RL)**, ready for notes, GitHub, or notebook use:
+
+---
+
+## 🧪 **EXERCISE: Implement Thompson Sampling Algorithm**
+
+Thompson Sampling is mainly used in **Multi-Armed Bandit** problems for balancing exploration and exploitation.
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Example dataset: Rewards from 10 rounds and 2 arms (replace with your dataset)
+# Here we simulate rewards (1 = success, 0 = failure)
+n_rounds = 1000
+n_arms = 2
+
+# Initialize counts of rewards and failures for each arm
+successes = np.zeros(n_arms)
+failures = np.zeros(n_arms)
+
+selections = []
+
+for _ in range(n_rounds):
+    theta = [np.random.beta(successes[i] + 1, failures[i] + 1) for i in range(n_arms)]
+    chosen_arm = np.argmax(theta)
+    selections.append(chosen_arm)
+    
+    # Simulated reward (replace with actual data)
+    reward = np.random.binomial(1, 0.5 if chosen_arm == 0 else 0.7)  
+    if reward == 1:
+        successes[chosen_arm] += 1
+    else:
+        failures[chosen_arm] += 1
+
+# Plot number of times each arm was selected
+plt.bar(range(n_arms), [selections.count(i) for i in range(n_arms)])
+plt.xlabel('Arm')
+plt.ylabel('Number of times selected')
+plt.title('Thompson Sampling Selections')
+plt.show()
+```
+
+---
+
+## ✅ **QUIZ**
+
+### 1. Enlist main elements of a Reinforcement Learning (RL) system.
+
+* **Agent**: Learner or decision maker.
+* **Environment**: The external system the agent interacts with.
+* **State (S)**: Current situation or observation from the environment.
+* **Action (A)**: Choices the agent can make.
+* **Reward (R)**: Feedback from the environment after an action.
+* **Policy (π)**: Strategy used by the agent to decide actions.
+* **Value Function**: Expected return or future reward for states or actions.
+
+---
+
+### 2. Explain Thompson Sampling algorithm.
+
+**Thompson Sampling** is a probabilistic algorithm for balancing **exploration** and **exploitation** in multi-armed bandit problems.
+It maintains a **posterior distribution** over the reward probability of each action (arm), and samples from these distributions to decide which action to take.
+
+* Actions with higher sampled reward probabilities are more likely to be chosen.
+* Over time, the algorithm updates beliefs (posteriors) based on observed rewards.
+* It naturally balances trying new actions (exploration) and using known best actions (exploitation).
+
+---
+
+Would you like a fully worked-out Jupyter notebook or code with your dataset integrated?
+P_10
+Here’s your **EXERCISE + QUIZ** content on **Artificial Neural Networks** ready for GitHub, Jupyter Notebook, or assignments:
+
+---
+
+## 🧪 **EXERCISE: Design, Implement, and Train an Artificial Neural Network**
+
+Using Keras (TensorFlow backend):
+
+```python
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.utils import to_categorical
+
+# Load dataset
+df = pd.read_csv('your_dataset.csv')  # Replace with your dataset
+
+# Prepare features and labels
+X = df.drop('target', axis=1)          # Replace 'target' with your label column
+y = df['target']
+
+# Encode labels (if classification)
+y_encoded = to_categorical(y)
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
+
+# Feature scaling
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Define the model
+model = Sequential()
+model.add(Dense(32, input_dim=X_train.shape[1], activation='relu'))  # Input layer + hidden layer
+model.add(Dense(16, activation='relu'))                             # Hidden layer
+model.add(Dense(y_encoded.shape[1], activation='softmax'))          # Output layer (multi-class)
+
+# Compile the model
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+# Train the model
+model.fit(X_train, y_train, epochs=50, batch_size=32, validation_split=0.2)
+
+# Evaluate the model
+loss, accuracy = model.evaluate(X_test, y_test)
+print(f"Test Accuracy: {accuracy*100:.2f}%")
+```
+
+---
+
+## ✅ **QUIZ**
+
+### 1. Difference between Machine Learning and Deep Learning
+
+| Machine Learning                                                 | Deep Learning                                               |
+| ---------------------------------------------------------------- | ----------------------------------------------------------- |
+| Focuses on traditional algorithms like SVM, Decision Trees, etc. | Uses neural networks with many layers (deep networks).      |
+| Requires manual feature extraction.                              | Automatically learns features from raw data.                |
+| Performs well on small to medium datasets.                       | Excels with large datasets and complex data (images, text). |
+| Less computationally intensive.                                  | Requires high computational power and GPUs.                 |
+
+---
+
+### 2. Briefly Explain Perceptron and Mention Its Limitation
+
+* **Perceptron** is the simplest type of artificial neural network; a single-layer binary classifier that computes a weighted sum of inputs, applies an activation function (step function), and outputs a binary decision (0 or 1).
+
+* **Limitation:**
+  It can only solve **linearly separable** problems (e.g., AND, OR gates) and fails on problems that are **not linearly separable** (e.g., XOR problem).
+
+---
+
+Would you like me to prepare this as a ready-to-run Jupyter Notebook or GitHub repo structure?
+
+
+
+
