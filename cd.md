@@ -562,3 +562,254 @@ int main() {
     }
     return 0;
 }
+
+#include <stdio.h>
+#include <string.h>
+
+/*
+ * Program: 8_operator_precedence.c
+ * Description: Implements an operator precedence parser.
+ * It uses a precedence table to parse simple arithmetic expressions.
+ * Terminals: i (id), +, *, $
+ */
+
+char stack[100];
+int top = -1;
+
+// Precedence Table
+// Rows/Cols: i, +, *, $
+// > : 1, < : -1, = : 0, error : 99
+int precedence_table[4][4] = {
+    {99, 1, 1, 1},  // i
+    {-1, 1, -1, 1}, // +
+    {-1, 1, 1, 1},  // *
+    {-1, -1, -1, 99} // $
+};
+
+int get_term_index(char c) {
+    switch(c) {
+        case 'i': return 0;
+        case '+': return 1;
+        case '*': return 2;
+        case '$': return 3;
+        default: return -1;
+    }
+}
+
+void push(char c) {
+    stack[++top] = c;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+int main() {
+    char input[100];
+    
+    printf("Operator Precedence Parser for terminals {i, +, *, $}\n");
+    printf("Enter the input string (end with $): ");
+    scanf("%s", input);
+    
+    push('$');
+    
+    int i = 0;
+    while (i <= strlen(input)) {
+        int stack_top_idx = get_term_index(stack[top]);
+        int input_char_idx = get_term_index(input[i]);
+
+        if (stack_top_idx == -1 || input_char_idx == -1) {
+            printf("Error: Invalid character.\n");
+            return 1;
+        }
+
+        int precedence = precedence_table[stack_top_idx][input_char_idx];
+
+        if (precedence == -1) { // Shift (precedence <)
+            push(input[i]);
+            i++;
+        } else if (precedence == 1) { // Reduce (precedence >)
+            pop();
+        } else {
+            if (stack[top] == '$' && input[i] == '$') {
+                printf("\nOutput: String is accepted.\n");
+                return 0;
+            } else {
+                 printf("\nError: String is not accepted.\n");
+                 return 1;
+            }
+        }
+    }
+    return 0;
+}
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+/*
+ * Program: 9_recursive_descent.c
+ * Description: Implements a recursive descent parser for simple expressions.
+ * Grammar:
+ * E -> T R
+ * R -> + T R | @
+ * T -> F S
+ * S -> * F S | @
+ * F -> ( E ) | i
+ */
+
+char input[100];
+int pos = 0;
+int error = 0;
+
+// Function prototypes for each non-terminal
+void E();
+void R();
+void T();
+void S();
+void F();
+
+void advance() {
+    pos++;
+}
+
+void E() {
+    T();
+    R();
+}
+
+void R() {
+    if (input[pos] == '+') {
+        advance();
+        T();
+        R();
+    }
+    // This handles the epsilon (@) case, as it does nothing if '+' is not found
+}
+
+void T() {
+    F();
+    S();
+}
+
+void S() {
+    if (input[pos] == '*') {
+        advance();
+        F();
+        S();
+    }
+    // Epsilon case
+}
+
+void F() {
+    if (input[pos] == '(') {
+        advance();
+        E();
+        if (input[pos] == ')') {
+            advance();
+        } else {
+            error = 1;
+        }
+    } else if (input[pos] == 'i') { // 'i' for identifier
+        advance();
+    } else {
+        error = 1;
+    }
+}
+
+int main() {
+    printf("Recursive Descent Parser for grammar E->TR, R->+TR|@, etc.\n");
+    printf("Enter an expression (use 'i' for id): ");
+    scanf("%s", input);
+
+    E(); // Start parsing from the start symbol E
+
+    // Check if the entire string was consumed and no errors occurred
+    if (pos == strlen(input) && !error) {
+        printf("\nOutput: String successfully parsed.\n");
+    } else {
+        printf("\nOutput: Error in parsing string.\n");
+    }
+
+    return 0;
+}
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+/*
+ * Program: 10_three_address_code.c
+ * Description: Generates three-address code for simple arithmetic expressions.
+ * This uses a simplified form of syntax-directed translation.
+ * Grammar: E -> E + T | T, T -> T * F | F, F -> (E) | id
+ */
+
+char input[100];
+int pos = 0;
+int temp_var_count = 0;
+
+// Function to generate a new temporary variable name (t0, t1, etc.)
+char* new_temp() {
+    char* temp = (char*)malloc(4 * sizeof(char));
+    sprintf(temp, "t%d", temp_var_count++);
+    return temp;
+}
+
+// Simplified parsing functions that return the variable name holding the result
+char* T();
+char* F();
+
+// E -> T { R }
+char* E() {
+    char* left = T();
+    while (input[pos] == '+') {
+        pos++;
+        char* right = T();
+        char* temp = new_temp();
+        printf("%s = %s + %s\n", temp, left, right);
+        left = temp;
+    }
+    return left;
+}
+
+// T -> F { S }
+char* T() {
+    char* left = F();
+    while (input[pos] == '*') {
+        pos++;
+        char* right = F();
+        char* temp = new_temp();
+        printf("%s = %s * %s\n", temp, left, right);
+        left = temp;
+    }
+    return left;
+}
+
+// F -> (E) | id
+char* F() {
+    char* var = (char*)malloc(10 * sizeof(char));
+    if (input[pos] == '(') {
+        pos++;
+        var = E();
+        if (input[pos] == ')') {
+            pos++;
+        }
+    } else {
+        // Assuming single character identifiers for simplicity
+        sprintf(var, "%c", input[pos]);
+        pos++;
+    }
+    return var;
+}
+
+int main() {
+    printf("Three-Address Code Generator\n");
+    printf("Enter an expression (e.g., a+b*c): ");
+    scanf("%s", input);
+    
+    printf("\n--- Three-Address Code ---\n");
+    E(); // Start the process
+    printf("--------------------------\n");
+
+    return 0;
+}
+
